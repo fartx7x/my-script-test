@@ -1,0 +1,86 @@
+-- Cria uma guia com a aba inicial
+local tab = game:GetService("CoreGui"):FindFirstChild("Cursed Bee Swarm Simulator") or Instance.new("ScreenGui")
+tab.Name = "Cursed Bee Swarm Simulator"
+tab.Parent = game:GetService("CoreGui")
+
+-- Cria um botão de alternância para selecionar o item no slot 1 do inventário
+local toggleSelectItem = Instance.new("TextButton")
+toggleSelectItem.Text = "Selecionar Item"
+toggleSelectItem.Size = UDim2.new(0, 100, 0, 50)
+toggleSelectItem.Position = UDim2.new(0, 10, 0, 10)
+toggleSelectItem.Parent = tab
+
+-- Cria um botão de alternância para clicar no centro da tela automaticamente
+local toggleClickCenter = Instance.new("TextButton")
+toggleClickCenter.Text = "Clicar no Centro"
+toggleClickCenter.Size = UDim2.new(0, 100, 0, 50)
+toggleClickCenter.Position = UDim2.new(0, 120, 0, 10)
+toggleClickCenter.Parent = tab
+
+-- Cria um botão de alternância para usar o item Micro Converter quando o pólen ultrapassar 800 milhões
+local toggleUseMicroConverter = Instance.new("TextButton")
+toggleUseMicroConverter.Text = "Usar Micro Converter"
+toggleUseMicroConverter.Size = UDim2.new(0, 100, 0, 50)
+toggleUseMicroConverter.Position = UDim2.new(0, 230, 0, 10)
+toggleUseMicroConverter.Parent = tab
+
+-- Seleciona o item no slot 1 do inventário quando o botão de alternância é ativado
+local itemSlot = 1
+local item = game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Inventory.Slots["Slot"..itemSlot].Item
+toggleSelectItem.MouseButton1Click:Connect(function()
+    if toggleSelectItem.Text == "Selecionar Item" then
+        item.Parent = game:GetService("Players").LocalPlayer.Backpack
+        toggleSelectItem.Text = "Deselecionar Item"
+    else
+        item.Parent = game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Inventory.Slots["Slot"..itemSlot]
+        toggleSelectItem.Text = "Selecionar Item"
+    end
+end)
+
+-- Clica no centro da tela automaticamente quando o botão de alternância é ativado
+local inputService = game:GetService("UserInputService")
+local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+local center = Vector2.new(game:GetService("Workspace").CurrentCamera.ViewportSize.X/2, game:GetService("Workspace").CurrentCamera.ViewportSize.Y/2)
+toggleClickCenter.MouseButton1Click:Connect(function()
+    if toggleClickCenter.Text == "Clicar no Centro" then
+        inputService.MouseIconEnabled = true
+        mouse.Move:Connect(function()
+            inputService.MouseIconEnabled = false
+        end)
+        mouse.Button1Down:Connect(function()
+            inputService.MouseIconEnabled = true
+        end)
+        mouse.Button1Up:Connect(function()
+            inputService.MouseIconEnabled = false
+        end)
+        mouse.Button2Down:Connect(function()
+            inputService.MouseIconEnabled = true
+        end)
+        mouse.Button2Up:Connect(function()
+            inputService.MouseIconEnabled = false
+        end)
+        toggleClickCenter.Text = "Parar de Clicar"
+    else
+        mouse.Move:Disconnect()
+        mouse.Button1Down:Disconnect()
+        mouse.Button1Up:Disconnect()
+        mouse.Button2Down:Disconnect()
+        mouse.Button2Up:Disconnect()
+        toggleClickCenter.Text = "Clicar no Centro"
+    end
+end)
+
+-- Usa o item Micro Converter quando o pólen ultrapassar 800 milhões quando o botão de alternância é ativado
+local useMicroConverter = false
+toggleUseMicroConverter.MouseButton1Click:Connect(function()
+    useMicroConverter = not useMicroConverter
+    if useMicroConverter then
+        toggleUseMicroConverter.Text = "Parar de Usar"
+    else
+        toggleUseMicroConverter.Text = "Usar Micro Converter"
+    end
+end)
+while true do
+    wait(1)
+    local pollenCount = game:GetService("Players").LocalPlayer.PlayerGui.GameUI.PollenCount.Value
+    if useMicroConverter and pollenCount > 800000000 then
