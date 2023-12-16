@@ -1,8 +1,41 @@
 local tab = Instance.new("ScreenGui")
 tab.Name = "Minha Gui"
 tab.Parent = game:GetService("CoreGui")
+
 local frame = Instance.new("Frame")
 frame.Name = "Página Inicial"
 frame.Size = UDim2.new(1, 0, 1, 0)
 frame.BackgroundTransparency = 1
 frame.Parent = tab
+
+local itemSlot = 1
+local item = game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Inventory.Slots["Slot"..itemSlot].Item
+item.Parent = game:GetService("Players").LocalPlayer.Backpack
+
+local inputService = game:GetService("UserInputService")
+local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+local center = Vector2.new(game:GetService("Workspace").CurrentCamera.ViewportSize.X/2, game:GetService("Workspace").CurrentCamera.ViewportSize.Y/2)
+inputService.MouseIconEnabled = true
+mouse.Move:Connect(function()
+    inputService.MouseIconEnabled = false
+end)
+mouse.Button1Down:Connect(function()
+    inputService.MouseIconEnabled = true
+end)
+mouse.Button1Up:Connect(function()
+    inputService.MouseIconEnabled = false
+end)
+mouse.Button2Down:Connect(function()
+    inputService.MouseIconEnabled = true
+end)
+mouse.Button2Up:Connect(function()
+    inputService.MouseIconEnabled = false
+end)
+
+while true do
+    wait(1)
+    local pollenCount = game:GetService("Players").LocalPlayer.PlayerGui.GameUI.PollenCount.Value
+    if pollenCount > 800000000 then
+        game:GetService("ReplicatedStorage").Events.UseItem:FireServer("Micro Converter")
+    end
+end
