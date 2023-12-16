@@ -1,9 +1,6 @@
--- Cria uma guia com a aba inicial
 local tab = Instance.new("ScreenGui")
 tab.Name = "Minha Gui"
 tab.Parent = game:GetService("CoreGui")
-
--- Cria um quadro para a aba "Página Inicial"
 local frame = Instance.new("Frame")
 frame.Name = "Página Inicial"
 frame.Size = UDim2.new(1, 0, 1, 0)
